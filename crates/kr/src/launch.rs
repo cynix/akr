@@ -41,6 +41,11 @@ impl Daemon {
     fn os_specific(self) -> LaunchAgent {
         return LaunchAgent::from(self);
     }
+
+    #[cfg(not(any(target_os = "linux", target_os = "macos")))]
+    fn os_specific(self) -> NoopDaemon {
+        return NoopDaemon::from(self);
+    }
 }
 
 #[cfg(target_os = "macos")]
@@ -151,5 +156,26 @@ impl SystemdService {
         
 
         Ok(())
+    }
+}
+
+#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+struct NoopDaemon {}
+
+#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+impl From<Daemon> for NoopDaemon {
+    fn from(_d: Daemon) -> Self {
+        Self {}
+    }
+}
+
+#[cfg(not(any(target_os = "linux", target_os = "macos")))]
+impl NoopDaemon {
+    fn install(&self) -> Result<(), Error> {
+        Ok(())
+    }
+
+    fn render(&self) -> Result<String, Error> {
+        Ok("# Please start akr manually".to_string())
     }
 }
