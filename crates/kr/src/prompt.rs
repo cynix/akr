@@ -20,7 +20,7 @@ impl PasswordPrompt {
         #[cfg(target_os = "macos")]
         let commmand_str = "pinentry-mac";
 
-        #[cfg(target_os = "linux")]
+        #[cfg(any(target_os = "linux", target_os = "freebsd"))]
         let commmand_str = "pinentry";
 
         let mut pinentry = Command::new(commmand_str)
