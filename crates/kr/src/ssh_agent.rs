@@ -153,7 +153,7 @@ impl Agent {
                 rp_id,
                 extensions: None,
                 key_handle: id.map(|id| id.key_handle.clone()).map(Base64Buffer),
-                key_handles: None,
+                key_handles: id.map(|id| id.key_handle.clone()).map(Base64Buffer).map(|b| vec![b]),
             }))
             .await?;
 
